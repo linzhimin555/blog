@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MyBlog</name>
+    </assembly>
+    <members>
+        <member name="M:MyBlog.Controllers.WeatherForecastController.GetName">
+            <summary>
+            这是个测试
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MyBlog.Controllers.WeatherForecastController.AddName">
+            <summary>
+            post请求
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
