@@ -16,6 +16,9 @@ using System.Text;
 using MyBlog.Common;
 using System.IO;
 using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Http;
+using MyBlog.Common.Jwt;
 
 namespace MyBlog
 {
@@ -33,15 +36,15 @@ namespace MyBlog
         {
             services.Configure<JwtSetting>(Configuration.GetSection("JwtSetting"));
             services.AddAuthentication("Bearer")
-                .AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidIssuer = Configuration["JwtSetting:ValidIssuer"],
-                        ValidAudience = Configuration["JwtSetting:ValidAudience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSetting:IssuerSigningKey"])),
-                    };
-                });
+                .AddJwtBearer("Bearer", options =>
+                 {
+                     options.TokenValidationParameters = new TokenValidationParameters
+                     {
+                         ValidIssuer = Configuration["JwtSetting:ValidIssuer"],
+                         ValidAudience = Configuration["JwtSetting:ValidAudience"],
+                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSetting:IssuerSigningKey"])),
+                     };
+                 });
             #region 配置跨域请求
             services.AddCors(options =>
             {
@@ -49,40 +52,39 @@ namespace MyBlog
                 options.AddDefaultPolicy(builder => builder.WithOrigins(origins).AllowAnyHeader().AllowAnyMethod().AllowCredentials());
             });
             #endregion
-            services.AddControllers();
+
+            #region Swagger
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info
+                c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
                     Title = "myBlog's API",
-                    Description = "A simple example ASP.NET Core Web API",
-                    TermsOfService = "None"
+                    Description = "A simple example ASP.NET Core Web API"
                 });
-                var basePath = Path.GetDirectoryName(typeof(Program).Assembly.Location);//获取应用程序所在目录（绝对，不受工作目录影响，建议采用此方法获取路径）
-                var xmlPath = Path.Combine(basePath, "MyBlog.xml");
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, "MyBlog.xml");
                 c.IncludeXmlComments(xmlPath);
-                c.AddSecurityDefinition("JwtBearer", new ApiKeyScheme
+                c.AddSecurityDefinition("JwtBearer", new OpenApiSecurityScheme
                 {
-                    Description = "Bearer {token}",
-                    Name = "Authorization",
-                    In = "header"
+                    Description = "JWT授权Bearer {token}",
+                    Name = "Authorization",//jwt默认的参数名称
+                    In = ParameterLocation.Header,//jwt默认存放Authorization信息的位置(请求头中)
+                    Type = SecuritySchemeType.ApiKey
                 });
             });
-
-            //services.Configure<MvcJsonOptions>(options =>
-            //{
-            //    options.SerializerSettings.Converters.Add(new DateTimeToUnixTimestampConverter());
-            //});
+            #endregion
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IJwtProvider, JwtProvider>();
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             #region swagger
-            //启用中间件服务生成Swagger作为JSON终结点
+            //启用中间件服务生成Swagger
             app.UseSwagger();
-            //启用中间件服务对swagger-ui，指定Swagger JSON终结点
+
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");

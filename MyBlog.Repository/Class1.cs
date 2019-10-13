@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MyBlog.Common
+namespace MyBlog.Repository
 {
     public class Class1
     {

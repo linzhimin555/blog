@@ -11,5 +11,7 @@ namespace MyBlog.Common
         public string ValidAudience { get; set; }
 
         public string IssuerSigningKey { get; set; }
+
+        public int Expires { get; set; }
     }
 }
