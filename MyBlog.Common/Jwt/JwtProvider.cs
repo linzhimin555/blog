@@ -28,6 +28,8 @@ namespace MyBlog.Common.Jwt
             ClaimsIdentity identity = new ClaimsIdentity("Bearer");
             identity.AddClaim(new Claim(ClaimTypes.Name, model.UserName));
             identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, model.Uid));
+            //identity.AddClaim(new Claim(JwtRegisteredClaimNames.Iss, _jwtSetting.ValidIssuer));
+            //identity.AddClaim(new Claim(JwtRegisteredClaimNames.Aud, _jwtSetting.ValidAudience));
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = identity,

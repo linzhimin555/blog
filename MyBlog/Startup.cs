@@ -40,8 +40,10 @@ namespace MyBlog
                  {
                      options.TokenValidationParameters = new TokenValidationParameters
                      {
-                         ValidIssuer = Configuration["JwtSetting:ValidIssuer"],
-                         ValidAudience = Configuration["JwtSetting:ValidAudience"],
+                         ValidateIssuer = false,
+                         ValidateAudience = false,
+                         //ValidIssuer = Configuration["JwtSetting:ValidIssuer"],
+                         //ValidAudience = Configuration["JwtSetting:ValidAudience"],
                          IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSetting:IssuerSigningKey"])),
                      };
                  });
@@ -88,7 +90,6 @@ namespace MyBlog
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-                //c.RoutePrefix = string.Empty;
             });
             #endregion
             if (env.IsDevelopment())
@@ -98,9 +99,10 @@ namespace MyBlog
             app.UseCors();
             app.UseHttpsRedirection();
 
-            app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {

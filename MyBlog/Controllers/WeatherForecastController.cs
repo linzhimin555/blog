@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -35,14 +36,43 @@ namespace MyBlog.Controllers
         {
             var uid = "admin";
             var token =  _jwtProvider.CreateJwtToken(new TokenModel { Uid = uid, UserName = "admin" });
+
+            SerializeJwt(token);
             return new JsonResult(token);
         }
 
+        /// <summary>
+        /// 解析
+        /// </summary>
+        /// <param name="jwtStr"></param>
+        /// <returns></returns>
+        private void SerializeJwt(string jwtStr)
+        {
+            var jwtHandler = new JwtSecurityTokenHandler();
+            JwtSecurityToken jwtToken = jwtHandler.ReadJwtToken(jwtStr);
+            object role;
+            try
+            {
+                //jwtToken.Payload.TryGetValue(ClaimTypes.Role, out role);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            //var tm = new TokenModelJwt
+            //{
+            //    Uid = (jwtToken.Id).ObjToInt(),
+            //    Role = role != null ? role.ObjToString() : "",
+            //};
+            //return tm;
+        }
         /// <summary>
         /// post请求
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetId")]
+        [Authorize]
         public ActionResult GetId()
         {
             var id = _jwtProvider.GetUserId();

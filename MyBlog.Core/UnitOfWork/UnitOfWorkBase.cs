@@ -36,5 +36,21 @@ namespace MyBlog.Core
             }
             return _repositories[type] as IRepository<TEntity>;
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //modelBuilder.Entity.
+
+            //builder.HasKey(o => o.Id);
+            //builder.Property(o => o.DiscountAmount).HasColumnType("decimal(18, 0)");
+            //builder.Property(o => o.ConditionAmount).HasColumnType("decimal(18, 0)");
+            //builder.Property(o => o.Id).HasColumnName("ADItemID");
+            //builder.HasOne(o => o.ActivitySeller).WithMany(o => o.AdItems).HasForeignKey(o => o.ASID);
+            //builder.HasMany(o => o.ActivityDetailItemStorages).WithOne(o => o.ActivityDetailItem).HasForeignKey(o => o.ADItemID);
+            //builder.HasMany(o => o.CouponProducts).WithOne().HasForeignKey(o => o.CouponId);
+            //builder.HasMany(o => o.CouponCitys).WithOne().HasForeignKey(o => o.CouponId);
+            //builder.ToTable("tblActivityDetailItem");
+        }
+
     }
 }
