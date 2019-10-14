@@ -38,6 +38,7 @@ namespace MyBlog.Controllers
             return new JsonResult(token);
         }
 
+        [Authorize]
         /// <summary>
         /// post请求
         /// </summary>
@@ -46,7 +47,7 @@ namespace MyBlog.Controllers
         public ActionResult GetId()
         {
             var id = _jwtProvider.GetUserId();
-            return new JsonResult("asfds");
+            return new JsonResult(id);
         }
     }
 }
