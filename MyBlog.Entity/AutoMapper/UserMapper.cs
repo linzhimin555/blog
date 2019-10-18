@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using AutoMapper.Configuration;
-using MyBlog.Cores;
 using System;
 using System.Collections.Generic;
 using System.Text;
