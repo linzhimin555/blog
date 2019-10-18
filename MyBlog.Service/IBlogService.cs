@@ -2,7 +2,7 @@
 
 namespace MyBlog.Service
 {
-    public class Class1
+    public interface IBlogService
     {
     }
 }

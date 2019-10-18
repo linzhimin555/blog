@@ -8,25 +8,70 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyBlog.Common.Jwt;
 using MyBlog.Core;
+using MyBlog.Core.Encrypt;
+using MyBlog.Entity;
+using MyBlog.Service;
 
 namespace MyBlog.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [ApiController]
     [Produces("application/json")]
     [Route("[controller]")]
-    public class WeatherForecastController : ApiControllerBase
+    public class UserController : ApiControllerBase
     {
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<UserController> _logger;
 
         private readonly IJwtProvider _jwtProvider;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, IJwtProvider jwtProvider)
+        private readonly IUserService _userService;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="jwtProvider"></param>
+        /// <param name="userService"></param>
+        public UserController(ILogger<UserController> logger, IJwtProvider jwtProvider, IUserService userService)
         {
             _logger = logger;
             _jwtProvider = jwtProvider;
+            _userService = userService;
         }
 
-        //[Authorize]
+        /// <summary>
+        /// 登陆 获取token
+        /// </summary>
+        /// <param name="userLogin"></param>
+        /// <returns></returns>
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login([FromBody]UserLoginRequest userLogin)
+        {
+            var result =  await _userService.UserLoginAsync(userLogin.UserName, userLogin.Password);
+            if (result.success)
+            {
+                var token = _jwtProvider.CreateJwtToken(new TokenModel { Uid = result.user.Id.ToString(), UserName = result.user.UserName });
+                //return new JsonResult("");
+            }
+            return new JsonResult("");
+        }
+
+        /// <summary>
+        /// 注册
+        /// </summary>
+        /// <param name="userRegister"></param>
+        /// <returns></returns>
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register([FromBody]UserRegisterRequest userRegister)
+        {
+            userRegister.Id = Guid.NewGuid();
+            userRegister.Password = EncryptHelper.Md5_32(userRegister.Password);
+            var success = await _userService.UserRegisterAsync(userRegister);
+            return new JsonResult(success);
+        }
+
         /// <summary>
         /// 这是个测试
         /// </summary>
@@ -34,8 +79,9 @@ namespace MyBlog.Controllers
         [HttpGet("SetToken")]
         public ActionResult GetToken()
         {
+            //_categoryService.Test();
             var uid = "admin";
-            var token =  _jwtProvider.CreateJwtToken(new TokenModel { Uid = uid, UserName = "admin" });
+            var token = _jwtProvider.CreateJwtToken(new TokenModel { Uid = uid, UserName = "admin" });
 
             SerializeJwt(token);
             return new JsonResult(token);
@@ -68,6 +114,7 @@ namespace MyBlog.Controllers
             //};
             //return tm;
         }
+
         /// <summary>
         /// post请求
         /// </summary>

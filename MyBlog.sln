@@ -7,13 +7,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyBlog", "MyBlog\MyBlog.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyBlog.Common", "MyBlog.Common\MyBlog.Common.csproj", "{A35F1464-CD28-4425-B144-7E211BAD69F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBlog.Core", "MyBlog.Core\MyBlog.Core.csproj", "{ABD0968A-7F55-4700-BAD7-EADAB46A1799}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyBlog.Core", "MyBlog.Core\MyBlog.Core.csproj", "{ABD0968A-7F55-4700-BAD7-EADAB46A1799}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBlog.Entity", "MyBlog.Entity\MyBlog.Entity.csproj", "{60FD56AA-E3DF-46F3-B36E-230BBE5D241A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyBlog.Entity", "MyBlog.Entity\MyBlog.Entity.csproj", "{60FD56AA-E3DF-46F3-B36E-230BBE5D241A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBlog.Service", "MyBlog.Service\MyBlog.Service.csproj", "{ECB12DC7-0250-4746-BBE1-14CEBF842B3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyBlog.Service", "MyBlog.Service\MyBlog.Service.csproj", "{ECB12DC7-0250-4746-BBE1-14CEBF842B3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBlog.Repository", "MyBlog.Repository\MyBlog.Repository.csproj", "{5F5B07D5-CFF1-41D7-83AE-68EEC8CE7BF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyBlog.Repository", "MyBlog.Repository\MyBlog.Repository.csproj", "{5F5B07D5-CFF1-41D7-83AE-68EEC8CE7BF2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBlog.UnitOfWork", "MyBlog.UnitOfWork\MyBlog.UnitOfWork.csproj", "{044BBAF6-D578-4D76-B020-4A1AD0390067}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{5F5B07D5-CFF1-41D7-83AE-68EEC8CE7BF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F5B07D5-CFF1-41D7-83AE-68EEC8CE7BF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F5B07D5-CFF1-41D7-83AE-68EEC8CE7BF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{044BBAF6-D578-4D76-B020-4A1AD0390067}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{044BBAF6-D578-4D76-B020-4A1AD0390067}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{044BBAF6-D578-4D76-B020-4A1AD0390067}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{044BBAF6-D578-4D76-B020-4A1AD0390067}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

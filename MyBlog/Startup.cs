@@ -20,6 +20,10 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Http;
 using MyBlog.Common.Jwt;
 using Microsoft.AspNetCore.DataProtection;
+using MyBlog.Core;
+using MyBlog.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace MyBlog
 {
@@ -36,6 +40,7 @@ namespace MyBlog
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<JwtSetting>(Configuration.GetSection("JwtSetting"));
+
             services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", options =>
                  {
@@ -68,18 +73,18 @@ namespace MyBlog
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, "MyBlog.xml");
                 c.IncludeXmlComments(xmlPath);
 
-                var security = new OpenApiSecurityRequirement();
-                security.Add(new OpenApiSecurityScheme
-                {
-                    Reference = new OpenApiReference()
-                    {
-                        Id = "JwtBearer",
-                        Type = ReferenceType.SecurityScheme
-                    },
-                    UnresolvedReference = true
-                }, new List<string>());
+                //var security = new OpenApiSecurityRequirement();
+                //security.Add(new OpenApiSecurityScheme
+                //{
+                //    Reference = new OpenApiReference()
+                //    {
+                //        Id = "JwtBearer",
+                //        Type = ReferenceType.SecurityScheme
+                //    },
+                //    UnresolvedReference = true
+                //}, new List<string>());
 
-                c.AddSecurityRequirement(security);
+                //c.AddSecurityRequirement(security);
 
                 c.AddSecurityDefinition("JwtBearer", new OpenApiSecurityScheme
                 {
@@ -92,7 +97,18 @@ namespace MyBlog
             #endregion
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IJwtProvider, JwtProvider>();
+            services.InitBaseService();
+           
+            services.AddUnitOfWork<IUnitOfWork,MyUnitOfWork>(o=> { 
+                o.UseSqlServer(Configuration.GetConnectionString("MySqlServer"),
+                    op =>
+                    {
+                        op.UseRowNumberForPaging();
+                    });
+            });
+
             services.AddControllers();
+            services.AddAutoMapper();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -119,6 +135,7 @@ namespace MyBlog
             app.UseAuthentication();
 
             app.UseAuthorization();
+            
 
             app.UseEndpoints(endpoints =>
             {
