@@ -19,6 +19,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Http;
 using MyBlog.Common.Jwt;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace MyBlog
 {
@@ -66,6 +67,20 @@ namespace MyBlog
                 });
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, "MyBlog.xml");
                 c.IncludeXmlComments(xmlPath);
+
+                var security = new OpenApiSecurityRequirement();
+                security.Add(new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference()
+                    {
+                        Id = "JwtBearer",
+                        Type = ReferenceType.SecurityScheme
+                    },
+                    UnresolvedReference = true
+                }, new List<string>());
+
+                c.AddSecurityRequirement(security);
+
                 c.AddSecurityDefinition("JwtBearer", new OpenApiSecurityScheme
                 {
                     Description = "JWTÊÚÈ¨Bearer {token}",
@@ -99,10 +114,11 @@ namespace MyBlog
             app.UseCors();
             app.UseHttpsRedirection();
 
-            app.UseAuthentication();
-            app.UseAuthorization();
-
             app.UseRouting();
+
+            app.UseAuthentication();
+
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
